@@ -1,0 +1,2 @@
+# Do not commit this directory because it most likely contains the server's SSL cert.
+**/data/certbot
