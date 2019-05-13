@@ -60,4 +60,10 @@ location /service-2 {
 
 The final step in the installation process requires modifying and running the `init-letsencrypt.sh` script in order to get the first SSL certificate and setup the necessary certbot components. Open the first script in your favorite text editor and add the FQDNs that certificates should be generated for. Next, provide the email address of the individual who is registering for the SSL certificate. The `data_path` variable should not be modified if no changes were made to this script.
 
-Once these configuration steps have been completed, the containers should run as expected and SSL certificates will be automatically renewed without user intervation.
+Run the script from your computer, outside of docker, using,
+
+```bash
+bash init-letsencypt.sh
+```
+
+Once these configuration steps have been completed, the containers should run as expected and SSL certificates will be automatically renewed without user intervention.
