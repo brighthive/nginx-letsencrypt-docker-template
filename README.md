@@ -29,6 +29,8 @@ upstream service-2 {
 }
 ```
 
+Important to note these must reference the correct values or nginx will fail to run and you won't be able to get SSL working.
+
 ### Setting Up App Configuration
 
 Note that in the last line of `data/nginx-conf/nginx.conf` there is a directive to include other configuration files located in `/etc/nginx/conf.d`. Inside the container, the directory `data/nginx` will be bound to that location. By default, there is a file named `app.conf` located in this directory. This configuration will be the most heavily modified.
@@ -56,9 +58,13 @@ location /service-2 {
 }
 ```
 
+Important to note that `proxy_pass` must reference the correct values or nginx will fail to run and you won't be able to get SSL working.
+
 ### Getting Initial SSL Certificate
 
 The final step in the installation process requires modifying and running the `init-letsencrypt.sh` script in order to get the first SSL certificate and setup the necessary certbot components. Open the first script in your favorite text editor and add the FQDNs that certificates should be generated for. Next, provide the email address of the individual who is registering for the SSL certificate. The `data_path` variable should not be modified if no changes were made to this script.
+
+By default this script is set to do a "dry run" with certbots [staging environment](https://letsencrypt.org/docs/staging-environment/). This allows you to have a higher number of attempts before you are rate limited.
 
 Run the script from your computer, outside of docker, using,
 
@@ -66,4 +72,10 @@ Run the script from your computer, outside of docker, using,
 bash init-letsencypt.sh
 ```
 
+Once this passes in the staging enviornment open `init-letsencrypt.sh` and change `staging=1` to `staging=0` and run `bash init-letsencypt.sh` again to offically complete this process.
+
 Once these configuration steps have been completed, the containers should run as expected and SSL certificates will be automatically renewed without user intervention.
+
+### Troubleshooting
+
+If you are receiving a connection refused error from letsencrypt use `docker logs` to check if nginx is failing to spin up. Fix the errors found in the logs and try again!
